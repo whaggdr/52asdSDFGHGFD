@@ -135,9 +135,9 @@ ingress:
                     "decryption": "none",
                     "fallbacks": [
                         { "dest": 3001 },
-                        { "path": "/vless-argo", "dest": 3002 },
-                        { "path": "/vmess-argo", "dest": 3003 },
-                        { "path": "/trojan-argo", "dest": 3004 }
+                        { "path": "/vless", "dest": 3002 },
+                        { "path": "/vmess", "dest": 3003 },
+                        { "path": "/trojan", "dest": 3004 }
                     ]
                 },
                 "streamSettings": {
@@ -169,11 +169,11 @@ ingress:
                     "network": "ws",
                     "security": "none",
                     "wsSettings": {
-                        "path": "/vless-argo"
+                        "path": "/vless"
                     }
                 },
                 "sniffing": {
-                    "enabled": true,
+                    "enabled": false,
                     "destOverride": ["http", "tls", "quic"],
                     "metadataOnly": false
                 }
@@ -188,11 +188,11 @@ ingress:
                 "streamSettings": {
                     "network": "ws",
                     "wsSettings": {
-                        "path": "/vmess-argo"
+                        "path": "/vmess"
                     }
                 },
                 "sniffing": {
-                    "enabled": true,
+                    "enabled": false,
                     "destOverride": ["http", "tls", "quic"],
                     "metadataOnly": false
                 }
@@ -208,11 +208,11 @@ ingress:
                     "network": "ws",
                     "security": "none",
                     "wsSettings": {
-                        "path": "/trojan-argo"
+                        "path": "/trojan"
                     }
                 },
                 "sniffing": {
-                    "enabled": true,
+                    "enabled": false,
                     "destOverride": ["http", "tls", "quic"],
                     "metadataOnly": false
                 }
@@ -425,7 +425,7 @@ async fn generate_links() {
         "net": "ws",
         "type": "none",
         "host": argodomain,
-        "path": "/vmess-argo?ed=2560",
+        "path": "/vmess?ed=2560",
         "tls": "tls",
         "sni": argodomain,
         "alpn": "",
@@ -435,13 +435,13 @@ async fn generate_links() {
     let mut list_file = File::create(format!("{}/list.txt", file_path))
         .expect("Failed to create list.txt");
 
-    writeln!(list_file, "vless://{}@{}:{}?encryption=none&security=tls&sni={}&fp=chrome&type=ws&host={}&path=%2Fvless-argo%3Fed%3D2560#{}-{}",
+    writeln!(list_file, "vless://{}@{}:{}?encryption=none&security=tls&sni={}&fp=chrome&type=ws&host={}&path=%2Fvless%3Fed%3D2560#{}-{}",
         uuid, cfip, cfport, argodomain, argodomain, name, isp).unwrap();
     
     writeln!(list_file, "\nvmess://{}", 
         BASE64_STANDARD.encode(serde_json::to_string(&vmess_config).unwrap())).unwrap();
     
-    writeln!(list_file, "\ntrojan://{}@{}:{}?security=tls&sni={}&fp=chrome&type=ws&host={}&path=%2Ftrojan-argo%3Fed%3D2560#{}-{}",
+    writeln!(list_file, "\ntrojan://{}@{}:{}?security=tls&sni={}&fp=chrome&type=ws&host={}&path=%2Ftrojan%3Fed%3D2560#{}-{}",
         uuid, cfip, cfport, argodomain, argodomain, name, isp).unwrap();
 
     let list_content = fs::read_to_string(format!("{}/list.txt", file_path))
